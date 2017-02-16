@@ -1,0 +1,10 @@
++0) Find out how to properly use cl-ncurses in app
++1) Main window - title, top border
++2) Functions to get owner/gowner for given path
++3) Data structure to store "folder-owner" data
++4) Function to calculate owners data structure for current dir
++5) Main window - draw folder owner list
++6) Main window - going up/down in tree structure
++7) Main window - going in/out of folders
+8) Calculation window
+...
