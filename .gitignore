@@ -1,0 +1,5 @@
+_bak/*
+.DS_Store
+*.so
+ownertreestruct.lisp
+temp.lisp
