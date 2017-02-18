@@ -49,7 +49,9 @@
 (defmethod node-max-size ((node file-node))
   (size node))
 (defmethod node-max-size ((node dir-node))
-  (apply #'max (mapcar #'node-max-size (children node))))
+  (if (children node)
+      (apply #'max (mapcar #'node-max-size (children node)))
+      0))
 
 (defun inc-owner-count (owner owner-assoc &optional (by 1))
   "Make sure to use returned value, not the original list as it's a destructive function"
