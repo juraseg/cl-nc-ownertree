@@ -52,11 +52,18 @@
   (setf (slot-value inst 'items)
         (sort-items (children (tree-root inst)))))
 
-(defgeneric init-window (window tree-root))
-(defmethod init-window ((window main-window) (tree-root node))
+(defgeneric init-window (window tree-root &optional selected selected-path))
+(defmethod init-window ((window main-window) (tree-root node) &optional selected selected-path)
   (setf (slot-value window 'tree-root) tree-root)
   (setf (slot-value window 'items) (sort-items (children tree-root)))
-  (setf (slot-value window 'selected) 0))
+  (let ((selected-val
+          (cond
+            ((and (not selected) selected-path)
+             (position-if (lambda (item)
+                            (equal (path item) selected-path))
+                          (items window)))
+            (t 0))))
+    (setf (slot-value window 'selected) selected-val)))
 
 (defgeneric go-up-list (window))
 (defmethod go-up-list ((window main-window))
@@ -91,10 +98,11 @@
 (defgeneric go-out-list (window))
 (defmethod go-out-list ((window main-window))
   ;; TODO: make it select previous root item
-  (let ((parent-item (parent (tree-root window))))
+  (let* ((current-item (tree-root window))
+         (parent-item (parent current-item)))
     (if parent-item
         (progn
-          (init-window window parent-item)
+          (init-window window parent-item nil (path current-item))
           (draw-window window))
         (draw-window-footer window
                             (format nil "No parent: ~a" parent-item)))))
@@ -103,7 +111,7 @@
 (defmethod draw-window ((window main-window))
   (cl-charms:clear-window (wnd window))
   (draw-window-title window)
-  (draw-window-footer window nil)
+  (draw-window-footer window)
   (draw-window-items window))
 
 (defgeneric draw-window-title (window))
@@ -117,8 +125,8 @@
       (draw-white-hline wnd (1- winrows) wincols)
       (draw-dashed-hline-with-text wnd 1 path-namestring))))
 
-(defgeneric draw-window-footer (window text))
-(defmethod draw-window-footer ((window main-window) text)
+(defgeneric draw-window-footer (window &optional text))
+(defmethod draw-window-footer ((window main-window) &optional text)
   (let ((wnd (wnd window))
         (text (if text
                   text
@@ -230,10 +238,3 @@
 (defun sort-items (items)
   (sort (copy-list items) #'> :key #'size))
 
-
-; TODO: main loop
-; + 1) Collect folder info (no progress bar for now)
-; + 2) Display list of direct children
-; 3) Keys - list movement
-; 4) Keys - going in
-; 5) Keys - going out
