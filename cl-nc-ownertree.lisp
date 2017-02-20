@@ -205,7 +205,7 @@
 (defun make-total-info-text(tree-root)
   (let ((size (loop :for (owner . owner-size) :in (owner-by-size tree-root)
                     :sum owner-size)))
-    (format nil "Total size: ~a" size)))
+    (format nil "Total size: ~a" (make-size-text size))))
 
 (defun make-node-owner-list-text (node owners max-size)
   (loop for o in owners
