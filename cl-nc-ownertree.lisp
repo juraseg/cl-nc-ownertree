@@ -4,14 +4,15 @@
 
 ;;; "cl-nc-ownertree" goes here. Hacks and glory await!
 
-(defun main ()
+(defun main (&optional namestring)
   (charms:with-curses ()
     (charms:disable-echoing)
     (charms:enable-raw-input :interpret-control-characters t)
     (charms/ll:curs-set 0)
-    (let* ((tree-root (process-directory *default-pathname-defaults*))
+    (let* ((path (if namestring (uiop:parse-unix-namestring namestring)
+                     *default-pathname-defaults*))
+           (tree-root (process-directory path))
            (window (make-instance 'main-window
-                                  :path *default-pathname-defaults*
                                   :tree-root tree-root)))
       ;; a loop which waits for "q" key to quit
       (draw-window window)
@@ -37,10 +38,10 @@
 (defclass main-window()
   ((wnd :reader wnd)
    (path :initarg :path
-         :initform "Must supply path"
+         :initform ""
          :reader path)
    (tree-root :initarg :tree-root
-              :initform '()
+              :initform (error "Must supply tree root")
               :reader tree-root)
    (items :initform '()
           :reader items)
@@ -48,12 +49,14 @@
              :reader selected)))
 (defmethod initialize-instance :after
     ((inst main-window) &rest args)
+  (setf (slot-value inst 'path) (path (tree-root inst)))
   (setf (slot-value inst 'wnd) (charms:make-window 0 0 0 0))
   (setf (slot-value inst 'items)
         (sort-items (children (tree-root inst)))))
 
 (defgeneric init-window (window tree-root &optional selected selected-path))
 (defmethod init-window ((window main-window) (tree-root node) &optional selected selected-path)
+  (setf (slot-value window 'path) (path tree-root))
   (setf (slot-value window 'tree-root) tree-root)
   (setf (slot-value window 'items) (sort-items (children tree-root)))
   (let ((selected-val
