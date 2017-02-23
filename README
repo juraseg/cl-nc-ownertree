@@ -1,1 +1,11 @@
-This is the stub README.txt for the "cl-nc-ownertree" project.
+NCurses Owner Tree
+==================
+
+This application is basically a copy of ncdu app but written in Common Lisp and
+in addition to showing size it also shows size split by owner.
+
+It had much less features than original ncdu: no ability to delete files/folders
+(hence no ability to refresh data), also instead of using arrow trees for
+navigation it uses keys 'jk' for moving up/down and 'io' for moving in folder
+and out of folder (this is due to impossibility to assign key bindings to
+arrows and Enter).
