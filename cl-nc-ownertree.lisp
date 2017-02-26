@@ -100,7 +100,6 @@
 
 (defgeneric go-out-list (window))
 (defmethod go-out-list ((window main-window))
-  ;; TODO: make it select previous root item
   (let* ((current-item (tree-root window))
          (parent-item (parent current-item)))
     (if parent-item
