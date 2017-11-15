@@ -5,19 +5,19 @@
 ;;; "cl-nc-ownertree" goes here. Hacks and glory await!
 
 (defun main (&optional namestring)
-  (charms:with-curses ()
-    (charms:disable-echoing)
-    (charms:enable-raw-input :interpret-control-characters t)
-    (charms/ll:curs-set 0)
-    (let* ((path (if namestring (uiop:parse-unix-namestring namestring)
-                     *default-pathname-defaults*))
-           ;; TODO: show calculation window
-           (tree-root (process-directory path))
-           (window (make-instance 'main-window
-                                  :tree-root tree-root)))
-      ;; a loop which waits for "q" key to quit
-      (draw-window window)
-      (main-loop window))))
+  (let* ((path (if namestring (uiop:parse-unix-namestring namestring)
+                  *default-pathname-defaults*))
+         (tree-root (process-directory path)))
+    (charms:with-curses ()
+      (charms:disable-echoing)
+      (charms:enable-raw-input :interpret-control-characters t)
+      (charms/ll:curs-set 0)
+      (let ((window (make-instance 'main-window
+                                   :tree-root tree-root)))
+        ;; TODO: show calculation window
+        ;; a loop which waits for "q" key to quit
+        (draw-window window)
+        (main-loop window)))))
 
 (defun main-loop (window)
   (let ((wnd (wnd window)))
