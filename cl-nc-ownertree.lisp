@@ -11,6 +11,7 @@
     (charms/ll:curs-set 0)
     (let* ((path (if namestring (uiop:parse-unix-namestring namestring)
                      *default-pathname-defaults*))
+           ;; TODO: show calculation window
            (tree-root (process-directory path))
            (window (make-instance 'main-window
                                   :tree-root tree-root)))

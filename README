@@ -9,3 +9,13 @@ It had much less features than original ncdu: no ability to delete files/folders
 navigation it uses keys 'jk' for moving up/down and 'io' for moving in folder
 and out of folder (this is due to impossibility to assign key bindings to
 arrows and Enter).
+
+Running
+=======
+Make sure the project is in your ASDF path, for example put it into ~/quicklisp/local-projects.
+Run SBCL (or CCL (todo)):
+>>> (asdf:load-system :cl-nc-ownertree)
+or
+>>> (quicklisp:quickload :cl-nc-ownertree)
+then
+>>> (cl-nc-ownertree:main #P"<path>")
