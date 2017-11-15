@@ -1,7 +1,13 @@
 ;; interface to UNIX system calls, which get file/folder owner and size
 (in-package :cl-nc-ownertree)
 
-(cffi:load-foreign-library "ownerutil.so")
+(defun get-foreign-library-path (lib-name)
+  (merge-pathnames lib-name
+                   (asdf:system-source-directory :cl-nc-ownertree)))
+
+
+(cffi:load-foreign-library
+ (get-foreign-library-path "ownerutil.so"))
 
 (cffi:defcfun get_owner :int
   (filepath :string)

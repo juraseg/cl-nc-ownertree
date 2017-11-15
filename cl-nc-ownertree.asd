@@ -10,6 +10,6 @@
   :serial t
   :components ((:file "package")
                (:file "fileutil" :depends-on ("package"))
-               (:file "ownertreesclass" :depends-on ("package" "fileutil"))
+               (:file "ownertreeclass" :depends-on ("package" "fileutil"))
                (:file "cl-nc-ownertree" :depends-on ("fileutil" "ownertreeclass"))))
 
