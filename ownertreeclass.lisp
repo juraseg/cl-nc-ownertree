@@ -69,7 +69,7 @@
                             :owner (get-path-owner path)
                             :parent parent)))
     (loop :for path :in (uiop:directory-files path)
-          :do (let* ((owner (get-path-owner (uiop:unix-namestring path)))
+          :do (let* ((owner (get-path-owner path))
                      (size (get-file-size path))
                      (f-node (make-instance 'file-node
                                             :path path
