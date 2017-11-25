@@ -8,16 +8,22 @@
   (let* ((path (if namestring (uiop:parse-unix-namestring namestring)
                   *default-pathname-defaults*))
          (tree-root (process-directory path)))
-    (charms:with-curses ()
-      (charms:disable-echoing)
-      (charms:enable-raw-input :interpret-control-characters t)
-      (charms/ll:curs-set 0)
-      (let ((window (make-instance 'main-window
-                                   :tree-root tree-root)))
-        ;; TODO: show calculation window
-        ;; a loop which waits for "q" key to quit
-        (draw-window window)
-        (main-loop window)))))
+    ;; TODO: on error deinitialize charms
+    (multiple-value-bind
+     (res error)
+     (ignore-errors
+      (charms:with-curses ()
+        (charms:disable-echoing)
+        (charms:enable-raw-input :interpret-control-characters t)
+        (charms/ll:curs-set 0)
+        (let ((window (make-instance 'main-window
+                                     :tree-root tree-root)))
+          ;; TODO: show calculation window
+          (draw-window window)
+          ;; a loop which waits for "q" key to quit
+          (main-loop window))))
+     (if (not (null error))
+         (format t "Error executing app: ~a" error)))))
 
 (defun main-loop (window)
   (let ((wnd (wnd window)))
